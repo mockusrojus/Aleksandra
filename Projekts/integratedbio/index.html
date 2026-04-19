@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integrated Biosciences — Engineering the future of aging medicine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.12.0/tsparticles.slim.bundle.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #050a0e;
+      --bg-mid:    #0a1628;
+      --accent:    #00d4ff;
+      --accent-10: rgba(0,212,255,0.10);
+      --accent-20: rgba(0,212,255,0.20);
+      --text:      #ffffff;
+      --muted:     rgba(255,255,255,0.55);
+      --dim:       rgba(255,255,255,0.30);
+      --border:    rgba(255,255,255,0.07);
+      --card:      rgba(255,255,255,0.025);
+      --hd:        'Space Grotesk', sans-serif;
+      --bd:        'Inter', sans-serif;
+      --max:       1200px;
+      --px:        2.5rem;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--bd);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── Sparkles background ── */
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    #bg canvas {
+      pointer-events: none !important;
+    }
+
+    /* ── Hero gradient accent (Aceternity-style) ── */
+    .hero-glow {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      height: 2.5rem;
+      margin-top: 1rem;
+      pointer-events: none;
+    }
+    .hero-glow::before,
+    .hero-glow::after,
+    .hero-glow .line-1,
+    .hero-glow .line-2 {
+      content: '';
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      top: 0;
+    }
+    /* wide indigo blur */
+    .hero-glow::before {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #6366f1, transparent);
+      filter: blur(2px);
+    }
+    /* sharp indigo line */
+    .hero-glow::after {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #6366f1, transparent);
+    }
+    /* narrow sky blur */
+    .hero-glow .line-1 {
+      left: 30%; right: 30%;
+      height: 5px;
+      background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+      filter: blur(3px);
+    }
+    /* sharp sky line */
+    .hero-glow .line-2 {
+      left: 30%; right: 30%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+    }
+
+    /* ── All content above canvas ── */
+    nav, section, footer { position: relative; z-index: 1; }
+
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--px);
+    }
+
+    /* ══════════════════════════════════════
+       NAV
+    ══════════════════════════════════════ */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 1.4rem 0;
+      transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
+      border-bottom: 1px solid transparent;
+    }
+    #nav.solid {
+      background: rgba(5,10,14,0.88);
+      backdrop-filter: blur(24px);
+      border-color: var(--border);
+    }
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: var(--hd);
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .logo em { font-style: normal; color: var(--accent); }
+    /* ── Pill nav with sliding cursor ── */
+    .nav-links {
+      position: relative;
+      display: flex;
+      align-items: center;
+      list-style: none;
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .nav-tab {
+      position: relative;
+      z-index: 2;
+      padding: 0.5rem 1.3rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.2s;
+      user-select: none;
+    }
+    .nav-tab:hover { color: var(--text); }
+    .nav-cursor {
+      position: absolute;
+      z-index: 1;
+      top: 4px;
+      left: 0;
+      height: calc(100% - 8px);
+      border-radius: 999px;
+      background: var(--accent-10);
+      border: 1px solid var(--accent-20);
+      pointer-events: none;
+      opacity: 0;
+      transition: left 0.22s cubic-bezier(0.34,1.56,0.64,1),
+                  width 0.22s cubic-bezier(0.34,1.56,0.64,1),
+                  opacity 0.15s ease;
+    }
+    /* Right side of nav */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    /* Theme toggle */
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover {
+      color: var(--text);
+      border-color: var(--accent);
+      background: var(--accent-10);
+    }
+    .nav-btn {
+      font-family: var(--bd);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 0.6rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .nav-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ══════════════════════════════════════
+       HERO
+    ══════════════════════════════════════ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 9rem var(--px) 6rem;
+    }
+    .hero-inner { max-width: var(--max); margin: 0 auto; width: 100%; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .eyebrow::before {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-h1 {
+      font-family: var(--hd);
+      font-size: clamp(3rem, 6.5vw, 5.8rem);
+      font-weight: 300;
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+      max-width: 840px;
+      margin-bottom: 1.75rem;
+    }
+    .hero-h1 em { font-style: normal; color: var(--accent); }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.75;
+      margin-bottom: 3rem;
+    }
+
+    .actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-fill {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 0.9rem 2.2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-fill:hover { opacity: 0.88; transform: translateY(-1.5px); }
+
+    .btn-outline {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text);
+      background: transparent;
+      padding: 0.9rem 2.2rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.22); transform: translateY(-1.5px); }
+
+    /* ══════════════════════════════════════
+       SHARED SECTION LABELS
+    ══════════════════════════════════════ */
+    .label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .sec-h2 {
+      font-family: var(--hd);
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300;
+      letter-spacing: -0.018em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+    .sec-p {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ══════════════════════════════════════
+       APPROACH
+    ══════════════════════════════════════ */
+    #approach {
+      padding: 9rem var(--px);
+      background: rgba(10,22,40,0.65);
+      backdrop-filter: blur(6px);
+    }
+    .approach-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .approach-left .sec-p { max-width: 100%; }
+
+    .steps { margin-top: 0.5rem; }
+    .step {
+      display: grid;
+      grid-template-columns: 3.5rem 1fr;
+      gap: 1.5rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .step:first-child { border-top: 1px solid var(--border); }
+    .step-n {
+      font-family: var(--hd);
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      padding-top: 0.3rem;
+    }
+    .step-title {
+      font-family: var(--hd);
+      font-size: 1.05rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .step-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ══════════════════════════════════════
+       PLATFORM
+    ══════════════════════════════════════ */
+    #platform { padding: 9rem var(--px); }
+
+    .platform-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: end;
+      margin-bottom: 4rem;
+    }
+    .platform-top .sec-p { max-width: 100%; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1.25rem;
+    }
+
+    /* ── Spotlight / Glow card (ported from Aceternity GlowCard) ── */
+    .card {
+      padding: 2.75rem 2.25rem;
+      border-radius: 14px;
+      position: relative;
+      /* card-specific spotlight vars */
+      --base:                 185;
+      --spread:               80;
+      --radius:               14;
+      --border:               1.5;
+      --backdrop:             rgba(5,10,14,0.75);
+      --backup-border:        rgba(255,255,255,0.07);
+      --size:                 260;
+      --outer:                1;
+      --bg-spot-opacity:      0.07;
+      --border-spot-opacity:  0.85;
+      --border-light-opacity: 0.5;
+      /* derived */
+      --border-size:    calc(var(--border) * 1px);
+      --spotlight-size: calc(var(--size) * 1px);
+      --hue:            calc(var(--base) + (var(--xp, 0) * var(--spread)));
+      background-image: radial-gradient(
+        var(--spotlight-size) var(--spotlight-size) at
+        calc(var(--x, -999) * 1px) calc(var(--y, -999) * 1px),
+        hsl(var(--hue) 100% 70% / var(--bg-spot-opacity)),
+        transparent
+      );
+      background-color:      var(--backdrop);
+      background-size:       calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
+      background-position:   50% 50%;
+      background-attachment: fixed;
+      border: var(--border-size) solid var(--backup-border);
+      touch-action: none;
+      transition: border-color 0.3s;
+    }
+
+    /* Glowing border via pseudo-elements */
+    .card::before,
+    .card::after {
+      pointer-events: none;
+      content: "";
+      position: absolute;
+      inset: calc(var(--border-size) * -1);
+      border: var(--border-size) solid transparent;
+      border-radius: calc(var(--radius) * 1px);
+      background-attachment: fixed;
+      background-size:     calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
+      background-repeat:   no-repeat;
+      background-position: 50% 50%;
+      -webkit-mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
+      mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
+      -webkit-mask-clip: padding-box, border-box;
+      mask-clip: padding-box, border-box;
+      -webkit-mask-composite: xor;
+      mask-composite: intersect;
+    }
+
+    /* Coloured spotlight on border */
+    .card::before {
+      background-image: radial-gradient(
+        calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
+        calc(var(--x, -999) * 1px) calc(var(--y, -999) * 1px),
+        hsl(var(--hue) 100% 50% / var(--border-spot-opacity)),
+        transparent 100%
+      );
+      filter: brightness(2);
+    }
+
+    /* White sparkle on border */
+    .card::after {
+      background-image: radial-gradient(
+        calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
+        calc(var(--x, -999) * 1px) calc(var(--y, -999) * 1px),
+        hsl(0 100% 100% / var(--border-light-opacity)),
+        transparent 100%
+      );
+    }
+
+    /* Inner bloom element */
+    .card .glow-bloom {
+      position: absolute;
+      inset: 0;
+      will-change: filter;
+      opacity: var(--outer, 1);
+      border-radius: calc(var(--radius) * 1px);
+      filter: blur(calc(var(--border-size) * 10));
+      background: none;
+      pointer-events: none;
+      border: none;
+      z-index: 0;
+    }
+
+    /* Push card content above the bloom layer */
+    .card > *:not(.glow-bloom) { position: relative; z-index: 1; }
+
+    .card-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      background: var(--accent-10);
+      border: 1px solid var(--accent-20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+    .card-h {
+      font-family: var(--hd);
+      font-size: 1.05rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+    .card-p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* ══════════════════════════════════════
+       STATS
+    ══════════════════════════════════════ */
+    #stats {
+      padding: 6rem var(--px);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,212,255,0.025);
+    }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 2rem;
+      text-align: center;
+    }
+    .stat-n {
+      font-family: var(--hd);
+      font-size: clamp(2.4rem,4vw,3.5rem);
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.02em;
+    }
+    .stat-l {
+      font-size: 0.82rem;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    /* ══════════════════════════════════════
+       ABOUT
+    ══════════════════════════════════════ */
+    #about {
+      padding: 9rem var(--px);
+      background: rgba(10,22,40,0.6);
+      backdrop-filter: blur(6px);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .about-img {
+      aspect-ratio: 4/5;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .about-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(20%) brightness(0.8);
+      transition: transform 0.6s;
+    }
+    .about-img:hover img { transform: scale(1.03); }
+
+    .about-text .sec-p { max-width: 100%; margin-bottom: 1.25rem; }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      margin-top: 0.75rem;
+      transition: gap 0.2s;
+    }
+    .text-link:hover { gap: 0.85rem; }
+
+    /* ══════════════════════════════════════
+       NEWSROOM
+    ══════════════════════════════════════ */
+    #newsroom { padding: 9rem var(--px); }
+
+    .news-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 1.5rem;
+    }
+    .news-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .news-card:hover {
+      border-color: rgba(0,212,255,0.28);
+      transform: translateY(-3px);
+    }
+    .news-thumb {
+      aspect-ratio: 16/9;
+      overflow: hidden;
+    }
+    .news-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(30%) brightness(0.7);
+      transition: transform 0.5s;
+    }
+    .news-card:hover .news-thumb img { transform: scale(1.05); }
+    .news-body { padding: 1.5rem; }
+    .news-tag {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.65rem;
+    }
+    .news-h {
+      font-family: var(--hd);
+      font-size: 0.975rem;
+      font-weight: 500;
+      line-height: 1.45;
+      margin-bottom: 0.75rem;
+    }
+    .news-meta {
+      font-size: 0.78rem;
+      color: var(--dim);
+    }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      padding: 4.5rem var(--px) 2.5rem;
+      border-top: 1px solid var(--border);
+      background: rgba(5,10,14,0.92);
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand .logo { font-size: 1rem; }
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 260px;
+      line-height: 1.75;
+      margin-top: 1rem;
+    }
+    .footer-col h4 {
+      font-family: var(--hd);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 1.25rem;
+    }
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .footer-col a {
+      font-size: 0.875rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--dim);
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .approach-grid,
+      .about-grid,
+      .platform-top { grid-template-columns: 1fr; gap: 2.5rem; }
+      .cards { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(2,1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      :root { --px: 1.25rem; }
+      .nav-links { display: none; }
+      .news-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .news-top { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    /* ══════════════════════════════════════
+       LIGHT MODE
+    ══════════════════════════════════════ */
+    [data-theme="light"] {
+      --bg:        #f0f4f8;
+      --bg-mid:    #e2eaf4;
+      --accent:    #0088aa;
+      --accent-10: rgba(0,136,170,0.10);
+      --accent-20: rgba(0,136,170,0.22);
+      --text:      #0a1628;
+      --muted:     rgba(10,22,40,0.58);
+      --dim:       rgba(10,22,40,0.36);
+      --border:    rgba(10,22,40,0.10);
+      --card:      rgba(10,22,40,0.03);
+    }
+
+    /* Sparkles: invert white → dark dots */
+    [data-theme="light"] #bg {
+      filter: invert(1) brightness(0.35);
+      opacity: 0.65;
+    }
+
+    /* Nav */
+    [data-theme="light"] #nav.solid {
+      background: rgba(240,244,248,0.92);
+    }
+
+    /* Section overlays */
+    [data-theme="light"] #approach,
+    [data-theme="light"] #about {
+      background: rgba(200,215,235,0.55);
+      backdrop-filter: blur(6px);
+    }
+    [data-theme="light"] #stats {
+      background: rgba(0,136,170,0.04);
+    }
+
+    /* Cards */
+    [data-theme="light"] .card {
+      --backdrop:             rgba(238,244,252,0.88);
+      --backup-border:        rgba(10,22,40,0.12);
+      --bg-spot-opacity:      0.05;
+      --border-spot-opacity:  0.6;
+      --border-light-opacity: 0.3;
+      --base: 195;
+    }
+
+    /* Footer */
+    [data-theme="light"] footer {
+      background: rgba(220,232,244,0.96);
+    }
+
+    /* News */
+    [data-theme="light"] .news-card:hover {
+      border-color: rgba(0,136,170,0.3);
+    }
+    [data-theme="light"] .news-thumb img {
+      filter: grayscale(15%) brightness(0.92);
+    }
+    [data-theme="light"] .about-img img {
+      filter: grayscale(10%) brightness(0.92);
+    }
+
+    /* Subtle theme transition */
+    body, #nav, section, footer, .card, .news-card {
+      transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sparkles background -->
+<div id="bg"></div>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <div class="container nav-wrap">
+    <a href="#" class="logo">Integrated<em>Bio</em></a>
+    <ul class="nav-links" id="nav-links">
+      <li class="nav-tab" data-href="#platform">Platform</li>
+      <li class="nav-tab" data-href="#about">Company</li>
+      <li class="nav-tab" data-href="#newsroom">Newsroom</li>
+      <div class="nav-cursor" id="nav-cursor"></div>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <span id="theme-icon">☾</span>
+      </button>
+      <a href="#contact" class="nav-btn">Work with us</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Early-stage biotechnology &nbsp;·&nbsp; San Carlos, CA</div>
+    <h1 class="hero-h1">Engineering the future<br>of <em>aging medicine</em></h1>
+    <p class="hero-sub">Combining synthetic biology, chemistry, and AI to probe disease biology with unprecedented control and precision.</p>
+    <div class="actions">
+      <a href="#platform" class="btn-fill">Explore Platform</a>
+      <a href="#about" class="btn-outline">Learn About Us</a>
+    </div>
+    <!-- Aceternity-style gradient accent lines -->
+    <div class="hero-glow">
+      <span class="line-1"></span>
+      <span class="line-2"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ APPROACH ══ -->
+<section id="approach">
+  <div class="container">
+    <div class="approach-grid">
+      <div>
+        <div class="label">Our Approach</div>
+        <h2 class="sec-h2">A systems-level view of aging</h2>
+        <p class="sec-p">Aging is not a single-gene problem. We address it as a complex systems biology challenge — an integrated platform designed to unravel its intricate networks with the precision modern medicine demands.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="step-n">01</span>
+          <div>
+            <div class="step-title">Precise Biological Control</div>
+            <p class="step-desc">Pioneering optogenetics to achieve dynamic, reversible control of cellular targets — generating high-fidelity datasets no conventional tool can produce.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">02</span>
+          <div>
+            <div class="step-title">Expansive Chemical Space</div>
+            <p class="step-desc">Diverse small-molecule chemistry libraries designed to explore previously inaccessible regions of therapeutic chemical space.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">03</span>
+          <div>
+            <div class="step-title">AI-Driven Discovery</div>
+            <p class="step-desc">Ultra-large foundation models trained on high-fidelity biological data to systematically identify new classes of disease-modifying molecules.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PLATFORM ══ -->
+<section id="platform">
+  <div class="container">
+    <div class="platform-top">
+      <div>
+        <div class="label">The Integrated Platform</div>
+        <h2 class="sec-h2">Three disciplines,<br>one coherent system</h2>
+      </div>
+      <p class="sec-p">Each capability amplifies the others — creating a discovery flywheel that no single-discipline approach can replicate.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="glow-bloom"></div>
+        <div class="card-icon">⚡</div>
+        <div class="card-h">Optogenetics &amp; Synthetic Biology</div>
+        <p class="card-p">Light-activated genetic tools that switch biological targets on and off with millisecond precision — transforming how we study the biology of aging at scale.</p>
+      </div>
+      <div class="card">
+        <div class="glow-bloom"></div>
+        <div class="card-icon">🧪</div>
+        <div class="card-h">Small-Molecule Chemistry</div>
+        <p class="card-p">A structurally diverse chemical library spanning underexplored space, designed to probe biology in ways traditional compound collections cannot.</p>
+      </div>
+      <div class="card">
+        <div class="glow-bloom"></div>
+        <div class="card-icon">🤖</div>
+        <div class="card-h">Artificial Intelligence</div>
+        <p class="card-p">Foundation models trained on billions of experimental data points — enabling systematic navigation of vast chemical and genetic landscapes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-row">
+      <div>
+        <div class="stat-n">2022</div>
+        <div class="stat-l">Year Founded</div>
+      </div>
+      <div>
+        <div class="stat-n">3+</div>
+        <div class="stat-l">Active Disease Programs</div>
+      </div>
+      <div>
+        <div class="stat-n">Nature</div>
+        <div class="stat-l">Published In</div>
+      </div>
+      <div>
+        <div class="stat-n">AI+Bio</div>
+        <div class="stat-l">Integrated Approach</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img">
+        <img src="https://picsum.photos/600/750?random=10" alt="Laboratory research">
+      </div>
+      <div class="about-text">
+        <div class="label">Company</div>
+        <h2 class="sec-h2">Built at the intersection of disciplines</h2>
+        <p class="sec-p">Integrated Biosciences was founded on the conviction that aging — and the diseases that arise from it — can only be defeated by treating it as the complex systems challenge it truly is.</p>
+        <p class="sec-p">Our team unites experts in synthetic biology, medicinal chemistry, and machine learning, working from a single integrated platform that compounds knowledge across every experiment run.</p>
+        <a href="#" class="text-link">Meet the team →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWSROOM ══ -->
+<section id="newsroom">
+  <div class="container">
+    <div class="news-top">
+      <div>
+        <div class="label">Newsroom</div>
+        <h2 class="sec-h2">Latest from the lab</h2>
+      </div>
+      <a href="#" class="text-link">View all →</a>
+    </div>
+    <div class="news-grid">
+      <a href="#" class="news-card">
+        <div class="news-thumb"><img src="https://picsum.photos/800/450?random=20" alt="Research"></div>
+        <div class="news-body">
+          <div class="news-tag">Publication · Nature</div>
+          <div class="news-h">Optogenetic control of aging pathways reveals new therapeutic targets in senescent cells</div>
+          <div class="news-meta">March 2026</div>
+        </div>
+      </a>
+      <a href="#" class="news-card">
+        <div class="news-thumb"><img src="https://picsum.photos/800/450?random=21" alt="Research"></div>
+        <div class="news-body">
+          <div class="news-tag">Publication · Cell</div>
+          <div class="news-h">AI-guided exploration of chemical space identifies novel senolytics with in vivo efficacy</div>
+          <div class="news-meta">January 2026</div>
+        </div>
+      </a>
+      <a href="#" class="news-card">
+        <div class="news-thumb"><img src="https://picsum.photos/800/450?random=22" alt="Research"></div>
+        <div class="news-body">
+          <div class="news-tag">Company News</div>
+          <div class="news-h">Integrated Biosciences closes Series A to advance integrated platform for aging medicine</div>
+          <div class="news-meta">November 2025</div>
+        </div>
+      </a>
+      <a href="#" class="news-card">
+        <div class="news-thumb"><img src="https://picsum.photos/800/450?random=23" alt="Research"></div>
+        <div class="news-body">
+          <div class="news-tag">Conference</div>
+          <div class="news-h">Presentation at the Gordon Research Conference on the Biology of Aging</div>
+          <div class="news-meta">October 2025</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer id="contact">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">Integrated<em>Bio</em></a>
+        <p>Engineering the future of aging medicine through the integration of synthetic biology, chemistry, and artificial intelligence.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Optogenetics</a></li>
+          <li><a href="#">Chemistry</a></li>
+          <li><a href="#">AI Models</a></li>
+          <li><a href="#">Pipeline</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Team</a></li>
+          <li><a href="#">Newsroom</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">Work with us</a></li>
+          <li><a href="#">Partnerships</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">San Carlos, CA</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Integrated Biosciences, Inc. All rights reserved.</span>
+      <span>Privacy · Terms</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   SPARKLES BACKGROUND (tsparticles — Aceternity port)
+══════════════════════════════════════════ */
+(function () {
+  tsParticles.load("bg", {
+    background:  { color: { value: "transparent" } },
+    fullScreen:  { enable: false },
+    fpsLimit:    120,
+    interactivity: {
+      events: { resize: { enable: true } }
+    },
+    particles: {
+      color: { value: "#ffffff" },
+      move: {
+        direction: "none",
+        enable:    true,
+        outModes:  { default: "out" },
+        random:    false,
+        speed:     { min: 0.1, max: 1 },
+        straight:  false,
+      },
+      number: {
+        density: { enable: true, width: 400, height: 400 },
+        value:   130,
+      },
+      opacity: {
+        value: { min: 0.1, max: 1 },
+        animation: {
+          enable:     true,
+          speed:      4,
+          sync:       false,
+          mode:       "auto",
+          startValue: "random",
+          destroy:    "none",
+        },
+      },
+      size: {
+        value: { min: 0.4, max: 1.2 },
+      },
+      shape: { type: "circle" },
+    },
+    detectRetina: true,
+  });
+})();
+
+/* ══════════════════════════════════════════
+   THEME TOGGLE
+══════════════════════════════════════════ */
+(function () {
+  var html    = document.documentElement;
+  var btn     = document.getElementById('theme-toggle');
+  var icon    = document.getElementById('theme-icon');
+  var isLight = localStorage.getItem('theme') === 'light';
+
+  function apply(light) {
+    html.setAttribute('data-theme', light ? 'light' : 'dark');
+    icon.textContent = light ? '☀' : '☾';
+    localStorage.setItem('theme', light ? 'light' : 'dark');
+  }
+
+  apply(isLight);
+  btn.addEventListener('click', function () {
+    isLight = !isLight;
+    apply(isLight);
+  });
+})();
+
+/* ══════════════════════════════════════════
+   SLIDING NAV CURSOR
+══════════════════════════════════════════ */
+(function () {
+  var ul     = document.getElementById('nav-links');
+  var cursor = document.getElementById('nav-cursor');
+  var tabs   = ul.querySelectorAll('.nav-tab');
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('mouseenter', function () {
+      cursor.style.left    = tab.offsetLeft + 'px';
+      cursor.style.width   = tab.offsetWidth + 'px';
+      cursor.style.opacity = '1';
+    });
+    tab.addEventListener('click', function () {
+      var href = tab.dataset.href;
+      if (href) {
+        var target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  ul.addEventListener('mouseleave', function () {
+    cursor.style.opacity = '0';
+  });
+})();
+
+/* ══════════════════════════════════════════
+   SPOTLIGHT CARD — cursor tracking
+══════════════════════════════════════════ */
+(function () {
+  var root = document.documentElement;
+  document.addEventListener('pointermove', function (e) {
+    root.style.setProperty('--x',  e.clientX.toFixed(2));
+    root.style.setProperty('--y',  e.clientY.toFixed(2));
+    root.style.setProperty('--xp', (e.clientX / window.innerWidth).toFixed(4));
+    root.style.setProperty('--yp', (e.clientY / window.innerHeight).toFixed(4));
+  });
+})();
+
+/* ══════════════════════════════════════════
+   NAV SCROLL EFFECT
+══════════════════════════════════════════ */
+(function () {
+  var nav = document.getElementById('nav');
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('solid', window.scrollY > 40);
+  });
+})();
+</script>
+
+</body>
+</html>
